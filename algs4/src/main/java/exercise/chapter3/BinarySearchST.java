@@ -2,21 +2,26 @@ package exercise.chapter3;
 
 import java.util.Iterator;
 
-public class BinarySearchST <Key extends Comparable<Key>, Value> implements OrderedST<Key, Value> {
-    private Key[] keys;
+public class BinarySearchST<Key extends Comparable<Key>, Value> implements OrderedST<Key, Value> {
+    public static final int DEFAULT_CAPACITY = 4;
+    private Key[] keys; // 升序
     private Value[] values;
     private int size = 0;
 
     public BinarySearchST() {
-        this.keys = (Key[])new Object[8];
-        this.values = (Value[])new Object[8];
+        this(DEFAULT_CAPACITY);
+    }
+
+    public BinarySearchST(int capacity) {
+        this.keys = (Key[]) new Comparable[capacity];
+        this.values = (Value[]) new Object[capacity];
     }
 
     private void grow() {
         int capacity = this.keys.length;
-        Key[] keys = (Key[])new Object[capacity*2];
-        Value[] values = (Value[])new Object[capacity*2];
-        for (int i = 0;i < capacity; i++) {
+        Key[] keys = (Key[]) new Comparable[capacity * 2];
+        Value[] values = (Value[]) new Object[capacity * 2];
+        for (int i = 0; i < capacity; i++) {
             keys[i] = this.keys[i];
             values[i] = this.values[i];
         }
@@ -37,8 +42,8 @@ public class BinarySearchST <Key extends Comparable<Key>, Value> implements Orde
             }
             // 在中间插入
             for (int j = this.size; j > i; j--) {
-                this.keys[j] = this.keys[j-1];
-                this.values[j] = this.values[j-1];
+                this.keys[j] = this.keys[j - 1];
+                this.values[j] = this.values[j - 1];
             }
             this.keys[i] = key;
             this.values[i] = val;
@@ -60,11 +65,11 @@ public class BinarySearchST <Key extends Comparable<Key>, Value> implements Orde
 
     public void delete(Key key) {
         if (isEmpty()) {
-            return ;
+            return;
         }
         int i = rank(key);
         if (i >= this.size) {
-            return ;
+            return;
         }
         // 移动后续的项
         for (int j = i; j < this.size - 1; j++) {
@@ -95,7 +100,7 @@ public class BinarySearchST <Key extends Comparable<Key>, Value> implements Orde
     // 最大的key
     public Key max() {
         if (this.size > 0) {
-            return this.keys[this.size-1];
+            return this.keys[this.size - 1];
         }
         return null;
     }
@@ -115,13 +120,13 @@ public class BinarySearchST <Key extends Comparable<Key>, Value> implements Orde
     }
 
     // 小于k的键的数量，所有k需要满足key==select(rank(k))
-    public int rank(Key k) {
+    public int rank(Key key) {
         int lo = 0;
         int hi = this.size;
         while (lo < hi) {
             int mid = lo + (hi - lo) / 2;
-            boolean less = keys[mid].compareTo(k) < 0;
-            if (less) { // lo <= mid < j
+            int cmp = this.keys[mid].compareTo(key);
+            if (cmp >= 0) { // lo <= mid < hi
                 hi = mid;
             } else {
                 lo = mid + 1;

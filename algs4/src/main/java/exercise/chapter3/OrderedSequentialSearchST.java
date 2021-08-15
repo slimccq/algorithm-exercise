@@ -13,7 +13,8 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
 
     public void put(Key key, Value val) {
         LinkedNode prev = first;
-        for (LinkedNode node = prev.next; node != null; node = node.next) {
+        LinkedNode node = first.next;
+        for (; node != null; node = node.next) {
             int cmp = key.compareTo(node.key);
             if (cmp == 0) {
                 node.val = val;
@@ -22,15 +23,19 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
                 LinkedNode newnode = new LinkedNode(key, val);
                 newnode.next = node;
                 prev.next = newnode;
-                break;
+                this.N++;
+                return;
             }
             prev = node;
         }
+        LinkedNode newnode = new LinkedNode(key, val);
+        prev.next = newnode;
+        this.N++;
     }
 
     public Value get(Key key) {
         for (LinkedNode node = first.next; node != null; node = node.next) {
-            int cmp = key.compareTo(node.key);
+            int cmp = node.key.compareTo(key);
             if (cmp == 0) {
                 return node.val;
             } else if (cmp > 0) {
