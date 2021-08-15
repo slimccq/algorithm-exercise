@@ -17,6 +17,6 @@ public interface OrderedST<Key extends Comparable<Key>, Value> extends ST<Key, V
     // 小于k的键的数量，所有k需要满足key==select(rank(k))
     int rank(Key k);
 
-    // 排名为rank的键， 所有i需要满足rank(select(i))
+    // 排名为rank的键， 所有i需要满足i==rank(select(i))
     Key select(int rank);
 }

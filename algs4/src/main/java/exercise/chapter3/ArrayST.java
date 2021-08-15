@@ -5,14 +5,19 @@ import java.util.Iterator;
 
 // 无序数组实现的符号表
 public class ArrayST<Key, Value> implements ST<Key, Value> {
+    public static final int DEFAULT_CAPACITY = 4;
     private Key[] keys;
     private Value[] values;
     private int N;
 
-    public ArrayST()
+    public ArrayST() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    public ArrayST(int capacity)
     {
-        this.keys = (Key[])new Object[8];
-        this.values = (Value[])new Object[8];
+        this.keys = (Key[])new Object[capacity];
+        this.values = (Value[])new Object[capacity];
     }
 
     private void grow() {

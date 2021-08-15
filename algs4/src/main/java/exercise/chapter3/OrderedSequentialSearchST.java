@@ -48,9 +48,10 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
     public void delete(Key key) {
         LinkedNode prev = first;
         for (LinkedNode node = prev.next; node != null; node = node.next) {
-            int cmp = key.compareTo(node.key);
+            int cmp = node.key.compareTo(key);
             if (cmp == 0) {
                 prev.next = node.next; // delete node
+                this.N--;
                 return;
             } else if (cmp > 0) {
                 break;
@@ -95,10 +96,12 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
     public Key floor(Key k) {
         LinkedNode prev = first;
         for (LinkedNode node = prev.next; node != null; node = node.next) {
-            int cmp = k.compareTo(node.key);
-            if (cmp > 0) {
-                return prev.key;
+            int cmp = node.key.compareTo(k);
+            if (cmp <= 0) {
+                prev = node;
+                continue;
             }
+            return prev.key;
         }
         return null;
     }
@@ -107,9 +110,10 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
     public Key ceiling(Key k) {
         for (LinkedNode node = first.next; node != null; node = node.next) {
             int cmp = node.key.compareTo(k);
-            if (cmp >= 0) {
-                return node.key;
+            if (cmp < 0) {
+                continue;
             }
+            return node.key;
         }
         return null;
     }
@@ -118,19 +122,20 @@ public class OrderedSequentialSearchST<Key extends Comparable<Key>, Value> imple
     public int rank(Key k) {
         int count = 0;
         for (LinkedNode node = first.next; node != null; node = node.next) {
-            int cmp = k.compareTo(node.key);
-            if (cmp > 0) {
+            int cmp = node.key.compareTo(k);
+            if (cmp < 0) {
+                count++;
+            } else {
                 break;
             }
-            count++;
         }
         return count;
     }
 
-    // 排名为rank的键， 所有i需要满足rank(select(i))
+    // 排名为rank的键， 所有i需要满足i==rank(select(i))
     public Key select(int rank) {
         LinkedNode node = first.next;
-        while (rank >= 0 && node != null) {
+        while (rank > 0 && node != null) {
             node = node.next;
             rank--;
         }

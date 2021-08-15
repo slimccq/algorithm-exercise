@@ -73,9 +73,12 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> implements Order
         }
         // 移动后续的项
         for (int j = i; j < this.size - 1; j++) {
-            this.keys[j] = this.keys[j++];
-            this.values[j] = this.values[j++];
+            this.keys[j] = this.keys[j + 1];
+            this.values[j] = this.values[j + 1];
         }
+        this.keys[this.size - 1] = null;
+        this.values[this.size - 1] = null;
+        this.size--;
     }
 
     public boolean contains(Key key) {
@@ -109,17 +112,29 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> implements Order
     public Key floor(Key k) {
         int i = rank(k);
         if (i < this.size) {
-            return this.keys[i];
+            if (this.keys[i].equals(k)) {
+                return this.keys[i];
+            } else if (i > 0) {
+                return this.keys[i - 1];
+            }
         }
         return null;
     }
 
     // 大于等于k的最小key
     public Key ceiling(Key k) {
+        int i = rank(k);
+        if (i < this.size) {
+            if (this.keys[i].equals(k)) {
+                return this.keys[i];
+            } else if (i + 1 < this.size) {
+                return this.keys[i + 1];
+            }
+        }
         return null;
     }
 
-    // 小于k的键的数量，所有k需要满足key==select(rank(k))
+    // 小于key的键的数量，所有key需要满足key==select(rank(key))
     public int rank(Key key) {
         int lo = 0;
         int hi = this.size;
@@ -135,9 +150,9 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> implements Order
         return lo;
     }
 
-    // 排名为rank的键， 所有i需要满足rank(select(i))
-    public Key select(int rank) {
-        return this.keys[rank];
+    // 排名为i的键， 所有i需要满足i == rank(select(i))
+    public Key select(int i) {
+        return this.keys[i];
     }
 
     @Override
