@@ -1,10 +1,30 @@
 package exercise.chapter3;
 
-
+import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 
 // 基于无序链表的符号表
 public class SequentialSearchST<Key, Value> implements ST<Key, Value> {
+    public class LinkedNode {
+        public LinkedNode next = null;
+        public Key key;
+        public Value val;
+
+        public LinkedNode()
+        {
+        }
+
+        public LinkedNode(Key k, Value val) {
+            this.key = k;
+            this.val = val;
+        }
+
+        public LinkedNode(LinkedNode next, Key k, Value val) {
+            this.next = next;
+            this.key = k;
+            this.val = val;
+        }
+    }
 
     private LinkedNode first = new LinkedNode(); // 链表
     private int size = 0;
@@ -72,7 +92,8 @@ public class SequentialSearchST<Key, Value> implements ST<Key, Value> {
         return size;
     }
 
-    public Iterator<Key> keys() {
+    @Override
+    public Iterator<Key> iterator() {
         return new STIterator();
     }
 
@@ -88,27 +109,6 @@ public class SequentialSearchST<Key, Value> implements ST<Key, Value> {
         public Key next() {
             node = node.next;
             return node.key;
-        }
-    }
-
-    public class LinkedNode {
-        public LinkedNode next = null;
-        public Key key;
-        public Value val;
-
-        public LinkedNode()
-        {
-        }
-
-        public LinkedNode(Key k, Value val) {
-            this.key = k;
-            this.val = val;
-        }
-
-        public LinkedNode(LinkedNode next, Key k, Value val) {
-            this.next = next;
-            this.key = k;
-            this.val = val;
         }
     }
 }
