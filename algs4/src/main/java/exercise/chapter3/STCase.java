@@ -1,14 +1,13 @@
 package exercise.chapter3;
 
 import edu.princeton.cs.algs4.StdOut;
-import exercise.chapter3.section1.Exercise2_ArrayST;
 
 public class STCase {
 
     public static void main(String[] args) {
         ST<Integer, Integer> st = null;
         if (args[0].equals("array")) {
-            st = new Exercise2_ArrayST();
+            st = new ArrayST();
         } else if (args[0].equals("binary_search")) {
             st = new BinarySearchST<>();
         } else {

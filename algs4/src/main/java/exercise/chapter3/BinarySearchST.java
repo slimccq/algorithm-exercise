@@ -2,7 +2,7 @@ package exercise.chapter3;
 
 import java.util.Iterator;
 
-public class BinarySearchST <Key extends Comparable<Key>, Value> implements ComparableST<Key, Value> {
+public class BinarySearchST <Key extends Comparable<Key>, Value> implements OrderedST<Key, Value> {
     private Key[] keys;
     private Value[] values;
     private int size = 0;

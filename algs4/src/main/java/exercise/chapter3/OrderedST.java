@@ -1,7 +1,7 @@
 package exercise.chapter3;
 
 // 有序符号表
-public interface ComparableST<Key extends Comparable<Key>, Value> extends ST<Key, Value> {
+public interface OrderedST<Key extends Comparable<Key>, Value> extends ST<Key, Value> {
     // 最小的key
     Key min();
 
