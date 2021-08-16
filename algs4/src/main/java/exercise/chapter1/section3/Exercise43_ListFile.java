@@ -17,11 +17,19 @@ public class Exercise43_ListFile {
         listFileDir(file, 0);
     }
 
+    public static String repeat(String word, int count) {
+        StringBuilder sb = new StringBuilder(word.length() * count);
+        for (int i = 0; i < count; i++) {
+            sb.append(word);
+        }
+        return sb.toString();
+    }
+
     public static void listFileDir(File file, int depth) {
         if (file.isFile()) {
             String space = "";
             if (depth > 1) {
-                space = TAB.repeat(depth);
+                space = repeat(TAB, depth);
             }
             StdOut.printf("%s%s\n", space, file.getName());
         }

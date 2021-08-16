@@ -30,19 +30,20 @@ public class Exercise38_bruteForce {
         int[] largeT = Utility.readIntLines(curPath + name2);
         StdOut.printf("load %s with %d integers\n", name2, largeT.length);
 
-        int target = RandUtil.randInt(10000);
-        //int target = 4468;
+        int target = largeW[largeW.length - 2];
         benchSearch(name1, largeW, target);
+
+        target = largeT[largeW.length - 2];
         benchSearch(name2, largeT, target);
     }
 
     public static void benchSearch(String name, int[] arr, int target) {
         Arrays.sort(arr);
-        long t1 = System.nanoTime();
+        long t1 = System.currentTimeMillis();
         int i = BinarySearch.searchInt(arr, target);
-        long t2 = System.nanoTime();
+        long t2 = System.currentTimeMillis();
         int j = bruteForceSearch(arr, target);
-        long t3 = System.nanoTime();
+        long t3 = System.currentTimeMillis();
         StdOut.printf("benchmark for search %d at %s:\n", target, name);
         StdOut.printf("\tbrute force   %d: cost %dns\n", j, t3 - t2);
         StdOut.printf("\tbinary search %d: cost %dns, %.2f times faster.\n", i, t2 - t1,
