@@ -1,0 +1,178 @@
+package exercise.chapter3;
+
+import java.util.Iterator;
+
+public class BinarySearchST<Key extends Comparable<Key>, Value> implements OrderedST<Key, Value> {
+    public static final int DEFAULT_CAPACITY = 4;
+    private Key[] keys; // 升序
+    private Value[] values;
+    private int size = 0;
+
+    public BinarySearchST() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    public BinarySearchST(int capacity) {
+        this.keys = (Key[]) new Comparable[capacity];
+        this.values = (Value[]) new Object[capacity];
+    }
+
+    private void grow() {
+        int capacity = this.keys.length;
+        Key[] keys = (Key[]) new Comparable[capacity * 2];
+        Value[] values = (Value[]) new Object[capacity * 2];
+        for (int i = 0; i < capacity; i++) {
+            keys[i] = this.keys[i];
+            values[i] = this.values[i];
+        }
+        this.keys = keys;
+        this.values = values;
+    }
+
+    public void put(Key key, Value val) {
+        if (size >= keys.length) {
+            grow();
+        }
+        int i = rank(key);
+        if (i < this.size) {
+            // 已经存在，更新值
+            if (this.keys[i].equals(key)) {
+                this.values[i] = val;
+                return;
+            }
+            // 在中间插入
+            for (int j = this.size; j > i; j--) {
+                this.keys[j] = this.keys[j - 1];
+                this.values[j] = this.values[j - 1];
+            }
+            this.keys[i] = key;
+            this.values[i] = val;
+        } else {
+            // 在末尾插入
+            this.keys[this.size] = key;
+            this.values[this.size] = val;
+        }
+        this.size++;
+    }
+
+    public Value get(Key key) {
+        int i = rank(key);
+        if (i < this.size && this.keys[i].equals(key)) {
+            return this.values[i];
+        }
+        return null;
+    }
+
+    public void delete(Key key) {
+        if (isEmpty()) {
+            return;
+        }
+        int i = rank(key);
+        if (i >= this.size) {
+            return;
+        }
+        // 移动后续的项
+        for (int j = i; j < this.size - 1; j++) {
+            this.keys[j] = this.keys[j + 1];
+            this.values[j] = this.values[j + 1];
+        }
+        this.keys[this.size - 1] = null;
+        this.values[this.size - 1] = null;
+        this.size--;
+    }
+
+    public boolean contains(Key key) {
+        return get(key) != null;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public Key min() {
+        if (this.size > 0) {
+            return this.keys[0];
+        }
+        return null;
+    }
+
+    // 最大的key
+    public Key max() {
+        if (this.size > 0) {
+            return this.keys[this.size - 1];
+        }
+        return null;
+    }
+
+    // 小于等于k的最大key
+    public Key floor(Key k) {
+        int i = rank(k);
+        if (i < this.size) {
+            if (this.keys[i].equals(k)) {
+                return this.keys[i];
+            } else if (i > 0) {
+                return this.keys[i - 1];
+            }
+        }
+        return null;
+    }
+
+    // 大于等于k的最小key
+    public Key ceiling(Key k) {
+        int i = rank(k);
+        if (i < this.size) {
+            if (this.keys[i].equals(k)) {
+                return this.keys[i];
+            } else if (i + 1 < this.size) {
+                return this.keys[i + 1];
+            }
+        }
+        return null;
+    }
+
+    // 小于key的键的数量，所有key需要满足key==select(rank(key))
+    public int rank(Key key) {
+        int lo = 0;
+        int hi = this.size;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            int cmp = this.keys[mid].compareTo(key);
+            if (cmp >= 0) { // lo <= mid < hi
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
+
+    // 排名为i的键， 所有i需要满足i == rank(select(i))
+    public Key select(int i) {
+        return this.keys[i];
+    }
+
+    @Override
+    public Iterator<Key> iterator() {
+        return new STIterator();
+    }
+
+    private class STIterator implements Iterator<Key> {
+        int i = 0;
+
+        @Override
+        public boolean hasNext() {
+            return i < size;
+        }
+
+        @Override
+        public Key next() {
+            int old = i;
+            i++;
+            return keys[old];
+        }
+    }
+}
